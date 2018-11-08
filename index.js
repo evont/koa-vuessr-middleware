@@ -107,9 +107,9 @@ exports = module.exports = function(app, options = {}) {
         template,
         clientManifest
       });
-      await render(renderer, ctx);
+      await render(renderer, settings.title, ctx);
     } else {
-      await readyPromise.then(() => render(renderer, ctx));
+      await readyPromise.then(() => render(renderer, settings.title, ctx));
     }
   }
 }
