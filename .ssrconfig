@@ -1,0 +1,10 @@
+{
+  "ouput": {
+    "path": "./dist",
+    "publicPath": "/dist/",
+  },
+  "entry": {
+    "client": "./src/entry-client.js",
+    "server": "./src/entry-server.js"
+  }
+}
