@@ -1,6 +1,6 @@
 {
   "name": "koa-vuessr-middleware",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "a vue ssr  middleware for koa",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,10 @@
     "build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.conf.js --progress --hide-modules"
   },
   "keywords": [
-    "koa", "middleware", "vue", "ssr"    
+    "koa",
+    "middleware",
+    "vue",
+    "ssr"
   ],
   "bin": {
     "buildssr": "./bin.js"
