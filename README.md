@@ -10,6 +10,8 @@ npm install koa-vuessr-middleware
 
 ## **usage**
 
+if you want to run in production mode, you should run `buildssr` command first
+
 ```javascript
 const koa = require('koa');
 const app = new koa();
@@ -59,7 +61,7 @@ You also need to have a `.ssrconfig` file in your root directory, here is an exa
 
 ---
 
-See `[Demo](https://github.com/evont/koa-vuessr-middleware/tree/master/demo)` for more pratical usage
+See [Demo](https://github.com/evont/koa-vuessr-middleware/tree/master/demo) for more pratical usage
 
 Directory structure example:
 
