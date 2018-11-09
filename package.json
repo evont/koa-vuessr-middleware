@@ -1,6 +1,6 @@
 {
   "name": "koa-vuessr-middleware",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "a vue ssr  middleware for koa",
   "main": "index.js",
   "scripts": {
