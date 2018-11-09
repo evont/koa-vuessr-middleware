@@ -68,18 +68,23 @@ function render(renderer, title, ctx) {
   })
 }
 
-let ssrconfig = fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8');
-ssrconfig = JSON.parse(ssrconfig);
-
 exports = module.exports = function(app, options = {}) {
+
+  let ssrconfig;
+  try {
+    ssrconfig = fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8');
+  } catch(e) {
+    console.error('You need to have a .ssrconfig file in your root directory');
+    throw new Error('no ssrconfig file')
+  }
+  
+  ssrconfig = JSON.parse(ssrconfig);
+
+
   const defaultSetting = {
     title: '', // default title for html
     isProd: false, // is Production Mode
-    templatePath: '', // html template path, if is not provided, use the default template file
-    webpackConfig: { // webpack config file
-      client: '', // client side config file path, if is not provided, use the default config
-      server: '', // server side config file path, if is not provided, use the default config
-    },
+    templatePath: '', // html template path, if is not provided, use the default template fil
   };
 
   const settings = extend(defaultSetting, options);
@@ -89,14 +94,16 @@ exports = module.exports = function(app, options = {}) {
   const distPath = path.resolve(process.cwd(), ssrconfig.output.path);
 
   let renderer;
-  let readyPromise = require('./config/setup-dev-server')(
-    app,
-    templatePath,
-    settings.webpackConfig,
-    (bundle, options) => {
-      renderer = createRenderer(bundle, distPath, options)
-    }
-  )
+  let readyPromise;
+  if (!settings.isProd) {
+    readyPromise = require('./config/setup-dev-server')(
+      app,
+      templatePath,
+      (bundle, options) => {
+        renderer = createRenderer(bundle, distPath, options)
+      }
+    )
+  }
   
   return async function ssr (ctx) {
     if (settings.isProd) {

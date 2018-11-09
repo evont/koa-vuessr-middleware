@@ -27,10 +27,11 @@ function koaHotMiddleware(expressHotMiddleware) {
       }).then(next);
   };
 }
+const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
+const { webpackConfig = {} } = ssrconfig;
 
-module.exports = function setupDevServer(app, templatePath, webpackConfig, cb) {
+module.exports = function setupDevServer(app, templatePath, cb) {
   const { client, server } = webpackConfig;
-  console.log(path.resolve(process.cwd(), client));
   const clientConfig = require(client ? path.resolve(process.cwd(), client) : './webpack.client.conf');
   const serverConfig = require(server ? path.resolve(process.cwd(), server) : './webpack.server.conf');
 

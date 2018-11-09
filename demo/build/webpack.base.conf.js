@@ -5,7 +5,6 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 
 const isProd = process.env.NODE_ENV === 'production';
-const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
 
 module.exports = {
   mode: 'production',
@@ -13,8 +12,8 @@ module.exports = {
     ? false
     : '#cheap-module-source-map',
   output: {
-    path: path.resolve(process.cwd(), ssrconfig.output.path),
-    publicPath: ssrconfig.output.publicPath,
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '/didididid/',
     filename: '[name].[chunkhash].js'
   },
   resolve: {
