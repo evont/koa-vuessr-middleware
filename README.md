@@ -1,5 +1,5 @@
 # Koa-VueSSR
-Vue SSR middleware for `koa 2.x`
+Vue SSR middleware for `koa 2.x` 
 
 ## **installation**
 
@@ -27,7 +27,7 @@ app.listen(8080);
 - `opts` options object
 
     **Options**
-    - `title` default title for html, default to empty
+    - `title` default title for html, default to empty string
     - `isProd` is Production Mode, default to false, if true, you need to run `buildssr` command to build distrubution file first. if false, the middleware will use `webpack-hot-middleware`& `webpack-dev-middleware` to setup a hot reload server;
     - `templatePath` html template path, default to empty string, then it will use the built in template file
 ---
