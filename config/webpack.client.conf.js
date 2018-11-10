@@ -9,7 +9,7 @@ const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrco
 
 const config = merge(base, {
   entry: {
-    app: ssrconfig.entry.server,
+    app: ssrconfig.entry.client,
   },
   optimization: {
     runtimeChunk: {
