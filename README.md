@@ -1,5 +1,5 @@
 # Koa-VueSSR
-Vue SSR middleware for `koa 2.x` 
+基于Koa 2.x 的Vue SSR 中间件（Vue SSR middleware for `koa 2.x`）
 
 ## **installation**
 
