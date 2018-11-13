@@ -1,15 +1,11 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const exec = require('child_process').exec;
 const path = require('path');
 const webpack = require('webpack');
 const rimraf = require('rimraf');
 const resolve = filepath => path.resolve(process.cwd(), filepath)
-const crossEnv = require('cross-env');
-
-crossEnv(['NODE_ENV=production'])
-
+const log = require('./colorLog');
 function webpackBuild(config) {
   const compiler = webpack(config);
   compiler.run((err, stats) => {
@@ -36,15 +32,22 @@ try {
       console.error(err);
       return;
     }
-    const clientConfig = require(client ? resolve(client) : './config/webpack.client.conf');
-    const serverConfig = require(server ? resolve(server) : './config/webpack.server.conf'); 
+    let clientConfig = require(client ? resolve(client) : './config/webpack.client.conf');
+    let serverConfig = require(server ? resolve(server) : './config/webpack.server.conf'); 
+
+    // 设置环境变量为开发模式
+    if (!client || typeof clientConfig === 'function') {
+      clientConfig = clientConfig();
+    }
+    if (!server || typeof serverConfig === 'function') {
+      serverConfig = serverConfig();
+    }
 
     webpackBuild(clientConfig);
     webpackBuild(serverConfig);
   });
 
-  
 } catch(e) {
-  console.error('You need to have a .ssrconfig file in your root directory');
+  log.error('You need to have a .ssrconfig file in your root directory')
   throw new Error(e)
 }

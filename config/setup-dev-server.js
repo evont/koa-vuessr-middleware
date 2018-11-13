@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const chokidar = require('chokidar');
 const MFS = require('memory-fs');
 
 function koaDevMiddleware(expressDevMiddleware) {
@@ -32,9 +31,16 @@ const { webpackConfig = {} } = ssrconfig;
 
 module.exports = function setupDevServer(app, templatePath, cb) {
   const { client, server } = webpackConfig;
-  const clientConfig = require(client ? path.resolve(process.cwd(), client) : './webpack.client.conf');
-  const serverConfig = require(server ? path.resolve(process.cwd(), server) : './webpack.server.conf');
-
+  let clientConfig = require(client ? path.resolve(process.cwd(), client) : './webpack.client.conf');
+  let serverConfig = require(server ? path.resolve(process.cwd(), server) : './webpack.server.conf');
+  
+  // 设置环境变量为开发模式
+  if (!client || typeof clientConfig === 'function') {
+    clientConfig = clientConfig(false);
+  }
+  if (!server || typeof serverConfig === 'function') {
+    serverConfig = serverConfig(false);
+  }
   let bundle;
   let template;
   let ready;
@@ -54,14 +60,12 @@ module.exports = function setupDevServer(app, templatePath, cb) {
   const readFile = (fs, file) => {
     try {
       return fs.readFileSync(path.join(clientConfig.output.path, file), 'utf-8')
-    } catch (e) {}
+    } catch (e) {
+
+    }
   }
 
   template = fs.readFileSync(templatePath, 'utf-8');
-  chokidar.watch(templatePath).on('change', () => {
-    template = fs.readFileSync(templatePath, 'utf-8')
-    update()
-  })
   
   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
   clientConfig.output.filename = '[name].js'

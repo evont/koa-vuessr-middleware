@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { createBundleRenderer } = require('vue-server-renderer');
 const LRU = require('lru-cache');
-
+const log = require('./colorLog');
 /**
  * deep extend object
  * @param {object} obj original object
@@ -39,57 +39,57 @@ function createRenderer(bundle, distPath, options) {
 
 function render(renderer, title, ctx) {
   ctx.set('Content-Type', 'text/html')
-  return new Promise((resolve, reject) => {
-    const handleError = err => {
-      if (err.url) {
-        ctx.redirect(err.url)
-      } else if(err.code === 404) {
-        ctx.throw(404, '404 | Page Not Found')
-        reject();
-      } else {
-        // Render Error Page or Redirect
-        ctx.throw(500, '500 | Internal Server Error')
-        console.error(err);
-        reject();
-      }
-      resolve();
+  const handleError = err => {
+    if (err.url) {
+      ctx.redirect(err.url)
+    } else if(err.code === 404) {
+      // ctx.throw(404, '404 | Page Not Found')
+      ctx.body = 'Page Not Found';
+    } else {
+      // Render Error Page or Redirect
+     //  ctx.throw(500, '500 | Internal Server Error')
+      console.error(err);
+      ctx.body = 'Internal Server Error';
     }
+  }
+  return new Promise((resolve, reject) => {
     const context = {
       title,
       url: ctx.url
     }
     renderer.renderToString(context, (err, html) => {
       if (err) {
-        return handleError(err)
+        
+        reject(err);
+      } else {
+        ctx.body = html;
+        resolve();
       }
-      ctx.body = html;
-      resolve();
     })
+  }).catch((error) => {
+    handleError(error);
   })
 }
 
 exports = module.exports = function(app, options = {}) {
-
   let ssrconfig;
   try {
     ssrconfig = fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8');
   } catch(e) {
-    console.error('You need to have a .ssrconfig file in your root directory');
+    log.error('You need to have a .ssrconfig file in your root directory');
     throw new Error('no ssrconfig file')
   }
   
   ssrconfig = JSON.parse(ssrconfig);
-
-
+  
   const defaultSetting = {
     title: '', // default title for html
     isProd: false, // is Production Mode
-    templatePath: '', // html template path, if is not provided, use the default template fil
   };
 
   const settings = extend(defaultSetting, options);
   
-  const templatePath = settings.templatePath || path.resolve(__dirname, 'index.template.html');
+  const templatePath = ssrconfig.template || path.resolve(__dirname, 'index.template.html');
 
   const distPath = path.resolve(process.cwd(), ssrconfig.output.path);
 
