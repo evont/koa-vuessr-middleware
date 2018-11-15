@@ -71,17 +71,21 @@ function render(renderer, title, ctx) {
   })
 }
 
+let ssrconfig;
+try {
+  ssrconfig = fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8');
+} catch(e) {
+  log.error('You need to have a .ssrconfig file in your root directory');
+  throw new Error('no ssrconfig file')
+}
+
+ssrconfig = JSON.parse(ssrconfig);
+
+const templatePath = ssrconfig.template || path.resolve(__dirname, 'index.template.html');
+
+const distPath = path.resolve(process.cwd(), ssrconfig.output.path);
+
 exports = module.exports = function(app, options = {}) {
-  let ssrconfig;
-  try {
-    ssrconfig = fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8');
-  } catch(e) {
-    log.error('You need to have a .ssrconfig file in your root directory');
-    throw new Error('no ssrconfig file')
-  }
-  
-  ssrconfig = JSON.parse(ssrconfig);
-  
   const defaultSetting = {
     title: '', // default title for html
     isProd: false, // is Production Mode
@@ -89,10 +93,6 @@ exports = module.exports = function(app, options = {}) {
 
   const settings = extend(defaultSetting, options);
   
-  const templatePath = ssrconfig.template || path.resolve(__dirname, 'index.template.html');
-
-  const distPath = path.resolve(process.cwd(), ssrconfig.output.path);
-
   let renderer;
   let readyPromise;
   if (!settings.isProd) {

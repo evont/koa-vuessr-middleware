@@ -22,5 +22,9 @@
     "koa-static": "^5.0.0",
     "koa-vuessr-middleware": "0.0.2",
     "vue-router": "^3.0.1"
+  },
+  "devDependencies": {
+    "vuex": "^3.0.1",
+    "vuex-router-sync": "^5.0.0"
   }
 }
