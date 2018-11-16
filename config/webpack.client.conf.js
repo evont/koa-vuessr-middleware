@@ -4,8 +4,10 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.conf')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
+const pkgJson = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf-8'));
 
 module.exports = ((isProd = true) => {
   return merge(base(isProd), {
@@ -33,7 +35,14 @@ module.exports = ((isProd = true) => {
       new webpack.DefinePlugin({
         'process.env.VUE_ENV': '"client"'
       }),
-      new VueSSRClientPlugin()
+      new VueSSRClientPlugin(),
+      isProd && new SWPrecachePlugin({
+        cacheId: pkgJson.name || 'sw-precache-webpack-plugi',
+        filename: 'service-worker.js',
+        minify: true,
+        dontCacheBustUrlsMatching: /./,
+        staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
+      })
     ]
   })
 })
