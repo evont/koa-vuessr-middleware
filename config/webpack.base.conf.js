@@ -1,11 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const vueLoaderConfig = require('./vue-loader.conf')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
+
+function assetsPath(_path) {
+  return path.posix.join(ssrconfig.output.path, _path)
+}
 
 module.exports = (isProd = true) => {
   return {
@@ -34,11 +39,7 @@ module.exports = (isProd = true) => {
         {
           test: /\.vue$/,
           loader: 'vue-loader',
-          options: {
-            compilerOptions: {
-              preserveWhitespace: false
-            }
-          }
+          options: vueLoaderConfig(isProd),
         },
         {
           test: /\.js$/,
@@ -47,34 +48,41 @@ module.exports = (isProd = true) => {
             loader: 'babel-loader',
             options: {
               "presets": [
-                ["env", { "modules": false }]
+                ["env", {
+                  "modules": false,
+                  "targets": {
+                    "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
+                  }
+                }]
               ],
-              "plugins": [
-                "syntax-dynamic-import"
-              ]
-            }
+              "plugins": ["transform-vue-jsx", "transform-runtime"]
+            }            
           }
         },
         {
-          test: /\.(png|jpg|gif|svg)$/,
+          test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
           loader: 'url-loader',
           options: {
             limit: 10000,
-            name: '[name].[ext]?[hash]'
+            name: assetsPath('img/[name].[hash:7].[ext]')
           }
         },
         {
-          test: /\.css$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: isProd,
-              },
-            }
-          ],
+          test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: assetsPath('media/[name].[hash:7].[ext]')
+          }
         },
+        {
+          test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: assetsPath('fonts/[name].[hash:7].[ext]')
+          }
+        }
       ]
     },
     performance: {
@@ -87,9 +95,6 @@ module.exports = (isProd = true) => {
             'process.env.NODE_ENV': JSON.stringify('production'),
           }),
           new VueLoaderPlugin(),
-          new MiniCssExtractPlugin({
-            filename: 'common.[chunkhash].css'
-          })
         ]
       : [
           new webpack.DefinePlugin({

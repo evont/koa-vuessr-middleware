@@ -71,6 +71,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
   clientConfig.output.filename = '[name].js'
   clientConfig.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   )
 

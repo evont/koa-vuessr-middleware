@@ -2,7 +2,7 @@ const koa = require('koa');
 const app = new koa();
 const koaRouter = require('koa-router');
 const serve = require('koa-static');
-const ssr = require('koa-vuessr-middleware');
+const ssr = require('../index');
 const router = new koaRouter();
 
 app.use(serve(__dirname + '/dist'));
