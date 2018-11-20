@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const vueLoaderConfig = require('./vue-loader.conf')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 
