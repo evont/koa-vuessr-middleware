@@ -10,7 +10,7 @@ const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrco
 const pkgJson = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf-8'));
 
 module.exports = ((isProd = true) => {
-  return merge(base(isProd), {
+  const config = {
     entry: {
       app: ssrconfig.entry.client,
     },
@@ -36,13 +36,16 @@ module.exports = ((isProd = true) => {
         'process.env.VUE_ENV': '"client"'
       }),
       new VueSSRClientPlugin(),
-      isProd && new SWPrecachePlugin({
-        cacheId: pkgJson.name || 'sw-precache-webpack-plugi',
-        filename: 'service-worker.js',
-        minify: true,
-        dontCacheBustUrlsMatching: /./,
-        staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
-      })
     ]
-  })
+  }
+  if (isProd) {
+    config.plugins.push(new SWPrecachePlugin({
+      cacheId: pkgJson.name || 'sw-precache-webpack-plugin',
+      filename: 'service-worker.js',
+      minify: true,
+      dontCacheBustUrlsMatching: /./,
+      staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
+    }))
+  }
+  return merge(base(isProd), config)
 })

@@ -54,7 +54,7 @@ module.exports = (isProd = true) => {
                   }
                 }]
               ],
-              "plugins": ["transform-vue-jsx", "transform-runtime"]
+              "plugins": ["transform-vue-jsx", "transform-runtime", "syntax-dynamic-import"]
             }            
           }
         },
