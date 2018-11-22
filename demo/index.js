@@ -9,7 +9,7 @@ app.use(serve(__dirname + '/dist'));
 app.use(serve(__dirname + '/public'));
 
 router.get('*', ssr(app, {
-  isProd: true,
+  isProd: false,
 }));
 app.use(router.routes());
 
