@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const vueLoaderConfig = require('./vue-loader.conf')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const util = require('./utils');
 
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
 
@@ -35,6 +36,7 @@ module.exports = (isProd = true) => {
     module: {
       noParse: /es6-promise\.js$/, // avoid webpack shimming process
       rules: [
+        ...util.styleLoaders({ sourceMap: isProd, extract: isProd, usePostCSS: true }),
         {
           test: /\.vue$/,
           loader: 'vue-loader',
