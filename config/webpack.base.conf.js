@@ -12,7 +12,7 @@ function assetsPath(_path) {
   return path.posix.join(ssrconfig.output.path, _path)
 }
 
-module.exports = (isProd = true) => {
+module.exports = (isProd = true, isServer = false) => {
   return {
     mode: isProd ? 'production' : 'development',
     devtool: isProd
@@ -36,11 +36,11 @@ module.exports = (isProd = true) => {
     module: {
       noParse: /es6-promise\.js$/, // avoid webpack shimming process
       rules: [
-        ...util.styleLoaders({ sourceMap: isProd, extract: isProd, usePostCSS: true }),
+        ...util.styleLoaders({ sourceMap: isProd, extract: isProd, isServer, usePostCSS: true }),
         {
           test: /\.vue$/,
           loader: 'vue-loader',
-          options: vueLoaderConfig(isProd),
+          options: vueLoaderConfig(isProd, isServer),
         },
         {
           test: /\.js$/,

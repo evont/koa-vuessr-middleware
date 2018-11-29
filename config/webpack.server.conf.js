@@ -9,7 +9,7 @@ const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
 
 module.exports = (isProd = true) => {
-  return merge(base(isProd), {
+  return merge(base(isProd, true), {
     target: 'node',
     devtool: '#source-map',
     entry: ssrconfig.entry.server,

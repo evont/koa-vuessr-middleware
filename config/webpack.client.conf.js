@@ -5,6 +5,7 @@ const merge = require('webpack-merge')
 const base = require('./webpack.base.conf')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
 const pkgJson = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf-8'));
@@ -39,6 +40,10 @@ module.exports = ((isProd = true) => {
     ]
   }
   if (isProd) {
+    config.plugins.push(new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+      allChunks: true,
+    }))
     config.plugins.push(new SWPrecachePlugin({
       cacheId: pkgJson.name || 'sw-precache-webpack-plugin',
       filename: 'service-worker.js',

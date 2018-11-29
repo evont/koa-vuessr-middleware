@@ -1,10 +1,11 @@
 'use strict'
 const utils = require('./utils')
-module.exports = (isProd) => {
+module.exports = (isProd, isServer) => {
   return {
     loaders: utils.cssLoaders({
       sourceMap: true,
-      extract: isProd
+      extract: isProd,
+      isServer,
     }),
     cssSourceMap: true,
     cacheBusting: true,
