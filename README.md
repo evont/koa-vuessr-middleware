@@ -8,7 +8,7 @@ npm install koa-vuessr-middleware
 ```
 ---
 ## **用法**
-如果你需要运行在生产环境中，你需要先执行 `buildssr` 命令生成生产代码
+如果你需要运行在生产环境中，你需要先执行 `vuessr` 命令生成生产代码
 
 ```javascript
 const koa = require('koa');
@@ -28,7 +28,7 @@ app.listen(8080);
 
     **Options**
     - `title` 页面默认标题，默认为空；
-    - `isProd` 是否为生产模式，默认为 `false`，如果设置为 `true`，你需要先执行`buildssr` 命令以生成生产代码，为`false` 时，该中间件会使用 `webpack-hot-middleware`& `webpack-dev-middleware` 以实现热更新功能；
+    - `isProd` 是否为生产模式，默认为 `false`，如果设置为 `true`，你需要先执行`vuessr` 命令以生成生产代码，为`false` 时，该中间件会使用 `webpack-hot-middleware`& `webpack-dev-middleware` 以实现热更新功能；
     - ~~`templatePath` 默认网页模板，默认为空，即使用内置的网页模板~~
 ---
 
@@ -152,7 +152,7 @@ export default context => {
 
 ## **usage**
 
-if you want to run in production mode, you should run `buildssr` command first
+if you want to run in production mode, you should run `vuessr` command first
 
 ```javascript
 const koa = require('koa');
@@ -172,7 +172,7 @@ app.listen(8080);
 
     **Options**
     - `title` default title for html, default to empty string
-    - `isProd` is Production Mode, default to false, if true, you need to run `buildssr` command to build distrubution file first. if false, the middleware will use `webpack-hot-middleware`& `webpack-dev-middleware` to setup a hot reload server;
+    - `isProd` is Production Mode, default to false, if true, you need to run `vuessr` command to build distrubution file first. if false, the middleware will use `webpack-hot-middleware`& `webpack-dev-middleware` to setup a hot reload server;
     - ~~`templatePath` html template path, default to empty string, then it will use the built in template file~~
 ---
 
