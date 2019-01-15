@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const HomeView = () => import('../views/home.vue');
+const NotFoundComponent = () => import('../views/notfound.vue');
 
 export function createRouter () {
   return new Router({
@@ -11,7 +12,8 @@ export function createRouter () {
     fallback: false,
     scrollBehavior: () => ({ y: 0 }),
     routes: [ 
-      { path: '/', component: HomeView }
+      { path: '/', component: HomeView },
+      { path: '*', component: NotFoundComponent }
     ]
   })
 }

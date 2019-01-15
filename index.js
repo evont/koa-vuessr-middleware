@@ -43,13 +43,13 @@ function render(renderer, title, ctx) {
     if (err.url) {
       ctx.redirect(err.url)
     } else if(err.code === 404) {
-      // ctx.throw(404, '404 | Page Not Found')
-      ctx.body = 'Page Not Found';
+      ctx.throw(404, '404 | Page Not Found')
+      // ctx.body = 'Page Not Found';
     } else {
       // Render Error Page or Redirect
-     //  ctx.throw(500, '500 | Internal Server Error')
+      ctx.throw(500, '500 | Internal Server Error')
       console.error(err);
-      ctx.body = 'Internal Server Error';
+      // ctx.body = 'Internal Server Error';
     }
   }
   return new Promise((resolve, reject) => {
