@@ -8,7 +8,13 @@ npm install koa-vuessr-middleware
 ```
 ---
 ## **用法**
-如果你需要运行在生产环境中，你需要先执行 `vuessr` 命令生成生产代码
+如果你需要运行在生产环境中，你需要先在`package.json` 文件中配置`scripts`字段，
+```json
+  "scripts": {
+    "build": "vuessr"
+  }
+```
+然后执行 `npm run build` 命令生成生产代码
 
 ```javascript
 const koa = require('koa');
@@ -28,7 +34,7 @@ app.listen(8080);
 
     **Options**
     - `title` 页面默认标题，默认为空；
-    - `isProd` 是否为生产模式，默认为 `false`，如果设置为 `true`，你需要先执行`vuessr` 命令以生成生产代码，为`false` 时，该中间件会使用 `webpack-hot-middleware`& `webpack-dev-middleware` 以实现热更新功能；
+    - `isProd` 是否为生产模式，默认为 `false`，如果设置为 `true`，你需要先生成生产代码，为`false` 时，该中间件会使用 `webpack-hot-middleware`& `webpack-dev-middleware` 以实现热更新功能；
     - ~~`templatePath` 默认网页模板，默认为空，即使用内置的网页模板~~
 ---
 
