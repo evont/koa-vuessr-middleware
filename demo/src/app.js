@@ -23,7 +23,7 @@ export function createApp () {
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = new Vue({
     router,
-    // store,
+    store,
     render: h => h(App)
   })
 

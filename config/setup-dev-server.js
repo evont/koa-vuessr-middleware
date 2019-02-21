@@ -65,7 +65,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
     }
   }
 
-  template = fs.readFileSync(templatePath, 'utf-8');
+  template = fs.readFileSync(path.resolve(process.cwd(), templatePath), 'utf-8');
   
   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
   clientConfig.output.filename = '[name].js'

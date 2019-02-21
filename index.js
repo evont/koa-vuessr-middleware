@@ -37,18 +37,27 @@ function createRenderer(bundle, distPath, options) {
   )
 }
 
-function render(renderer, title, ctx) {
+function render(renderer, title, ctx, ssrconfig) {
   ctx.set('Content-Type', 'text/html')
+  const { errorPage = {} } = ssrconfig
   const handleError = err => {
     if (err.url) {
       ctx.redirect(err.url)
     } else if(err.code === 404) {
-      ctx.throw(404, '404 | Page Not Found')
+      if (errorPage['404']) {
+        ctx.body = fs.createReadStream(errorPage['404']);
+      } else {
+        ctx.throw(404, err.toString())
+
+      }
       // ctx.body = 'Page Not Found';
     } else {
       // Render Error Page or Redirect
-      ctx.throw(500, '500 | Internal Server Error')
-      console.error(err);
+      if (errorPage['500']) {
+        ctx.body = fs.createReadStream(errorPage['500']);
+      } else {
+        ctx.body = err.stack || 'Internal Server Error';
+      }
       // ctx.body = 'Internal Server Error';
     }
   }
@@ -59,7 +68,6 @@ function render(renderer, title, ctx) {
     }
     renderer.renderToString(context, (err, html) => {
       if (err) {
-        
         reject(err);
       } else {
         ctx.body = html;
@@ -80,7 +88,6 @@ try {
 }
 
 ssrconfig = JSON.parse(ssrconfig);
-
 const templatePath = ssrconfig.template || path.resolve(__dirname, 'index.template.html');
 
 const distPath = path.resolve(process.cwd(), ssrconfig.output.path);
@@ -107,16 +114,16 @@ exports = module.exports = function(app, options = {}) {
   
   return async function ssr (ctx) {
     if (settings.isProd) {
-      const template = fs.readFileSync(templatePath, 'utf-8');
+      const template = fs.readFileSync(path.resolve(process.cwd(), templatePath), 'utf-8');
       const bundle = require(`${distPath}/vue-ssr-server-bundle.json`);
       const clientManifest = require(`${distPath}/vue-ssr-client-manifest.json`);
       renderer = createRenderer(bundle, distPath, {
         template,
         clientManifest
       });
-      await render(renderer, settings.title, ctx);
+      await render(renderer, settings.title, ctx, ssrconfig);
     } else {
-      await readyPromise.then(() => render(renderer, settings.title, ctx));
+      await readyPromise.then(() => render(renderer, settings.title, ctx, ssrconfig));
     }
   }
 }

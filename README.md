@@ -48,6 +48,10 @@ app.listen(8080);
     "path": "./dist", 
     "publicPath": "/dist/"
   },
+  "errorPage": {
+    "500": "./500.html",
+    "404": "./404.html"
+  },
   "entry": {
     "client": "./src/entry-client.js",
     "server": "./src/entry-server.js"
@@ -60,6 +64,7 @@ app.listen(8080);
 ```
 - `template` 默认网页模板，默认为空，即使用内置的网页模板
 - `entry` 当你想要使用内置webpack 配置文件的时候为**必要**选项。 webpack的入口js， `client` 是客户端入口文件, `server` 为服务端入口文件;
+- `errorPage` 当服务端出现500或404错误时使用的页面，可配置500 or 404字段，不配置时会显示报错信息
 - `output` 如果你想使用内置webpack 配置文件的时候，你需要声明输出目录选项， `path` 为输出的文件夹目录，`publicPath` 是生成到模板中时的资源路径, 具体可以参考 [webpack output 配置](https://webpack.js.org/configuration/output/)
 - `webpackConfig` 如果你倾向于使用你自己的webpack 配置文件，你需要配置下列选项: 
     - `client` 客户端配置webpack 配置
@@ -297,3 +302,9 @@ if you want to use your own webpack configuration & you want to use `Code-Splitt
     "syntax-dynamic-import"
 ]
 ```
+
+
+## **ChangeLog**
+### v 1.0.3
+- 新增自定义错误页面
+- 将500 错误设置默认显示为报错信息
